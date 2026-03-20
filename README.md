@@ -107,7 +107,3 @@ npm run dev
 - Frontend: `http://localhost:5173`
 - El proxy de Vite redirige las llamadas a `/api` hacia `http://localhost:3000`.
 
-## Notas para reclutadores
-- Backend organizado en `src/` con separación clara entre `routes`, `controllers`, `services`, `models`, `validators`, `middlewares`.
-- Validaciones con `zod`, seguridad con JWT y control de acceso por roles en middlewares/servicios.
-- Frontend minimal pero funcional en React + TS que respeta las reglas de permisos (user vs admin) y consume el API real.
