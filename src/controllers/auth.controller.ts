@@ -69,6 +69,7 @@ export async function updateUserController(req: Request, res: Response) {
   }
 }
 
+
 // Delete user
 export async function deleteUserController(req: Request, res: Response) {
   try {

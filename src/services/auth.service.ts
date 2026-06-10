@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs"
 import { User, IUser, IUserResponse } from "../models/User.model"
 import jwt from "jsonwebtoken"
 import { Role } from "../types/role";
+import { date, success } from "zod";
 
 
 //  Function for creating to user
@@ -92,6 +93,7 @@ export async function updateUser(userId: string, updates: Partial<IUserResponse>
     throw new Error("Error updating user");
   }
 }
+
 
 // Delete user
 export async function deleteUser(userId: string): Promise<void> {
