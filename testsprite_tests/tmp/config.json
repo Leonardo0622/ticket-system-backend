@@ -1,0 +1,20 @@
+{
+  "status": "commited",
+  "type": "backend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:5173",
+  "backendAuthType": "basic token",
+  "backendUsername": "kay@gmail.com",
+  "backendPassword": "kay123",
+  "executionArgs": {
+    "projectName": "ticket-system",
+    "projectPath": "C:\\Users\\leona\\OneDrive - uniminuto.edu\\Escritorio\\ticket-system",
+    "testIds": [],
+    "additionalInstruction": "Auditoría técnica completa: formularios, inputs vacíos/inválidos, botones, rutas, autenticación, validaciones backend, manejo de excepciones. Probar login, registro, CRUD de tickets con roles user/admin.",
+    "serverMode": "development",
+    "envs": {
+      "API_KEY": "sk-user-_o0OVJ6dcrnvsbn3PweKwVdKxzwlSGycwz5eNfCEd7eD9sQAf9mcSxKw8cnVm8IFf6DnZMzzdqals-vpun4JqYXb-CiFZOxY_BH0_5cp-ccxESJ9KcFqW4XDq-4Ul_Sx9QQ"
+    }
+  },
+  "serverPort": 49764
+}

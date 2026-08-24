@@ -4,6 +4,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { TicketsPage } from "./pages/TicketsPage";
 import { Layout } from "./components/Layout";
+import { Toaster } from "@/components/ui/sonner";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const { token } = useAuth();
@@ -32,7 +33,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>
+      <Toaster richColors position="top-right" closeButton />
     </AuthProvider>
   );
 }
-

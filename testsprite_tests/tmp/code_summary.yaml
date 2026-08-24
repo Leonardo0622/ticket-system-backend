@@ -1,0 +1,85 @@
+project_name: ticket-system
+description: Full-stack ticket management system with JWT authentication and role-based access control
+
+tech_stack:
+  backend:
+    - Node.js
+    - Express 5
+    - TypeScript
+    - MongoDB / Mongoose
+    - JWT (jsonwebtoken)
+    - Zod validation
+    - Swagger UI
+    - bcryptjs
+  frontend:
+    - React 18
+    - TypeScript
+    - Vite 6
+    - React Router 6
+    - TanStack React Query
+    - Axios
+
+architecture:
+  pattern: Monorepo with separate backend (root) and frontend (client/)
+  backend_port: 3000
+  frontend_port: 5173
+  api_prefix: /api
+  proxy: Vite dev server proxies /api to http://localhost:3000
+
+features:
+  authentication:
+    - User registration (/api/auth/register)
+    - User login with JWT (/api/auth/login)
+    - JWT middleware for protected routes
+    - Roles: admin, agent, user
+  user_management:
+    - List users (admin only)
+    - Update user (admin only)
+    - Delete user (admin only)
+  tickets:
+    - Create ticket (authenticated)
+    - List tickets (role-filtered)
+    - Get ticket by ID
+    - Update ticket (role-based permissions)
+    - Delete ticket (role-based permissions)
+    - Assign ticket to agent (admin only)
+  frontend_pages:
+    - /login - Login form
+    - /register - Registration form
+    - /tickets - Protected ticket dashboard with CRUD
+
+critical_modules:
+  - src/server.ts - Entry point
+  - src/app.ts - Express app configuration
+  - src/config/db.ts - MongoDB connection
+  - src/middlewares/auth.middleware.ts - JWT verification
+  - src/middlewares/role.middleware.ts - Role authorization
+  - src/middlewares/validate.middleware.ts - Zod validation
+  - src/routes/auth.routes.ts - Auth endpoints
+  - src/routes/ticket.routes.ts - Ticket endpoints
+  - src/controllers/auth.controller.ts
+  - src/controllers/ticket.controller.ts
+  - src/services/auth.service.ts
+  - src/services/ticket.service.ts
+  - client/src/api/client.ts - Axios API client
+  - client/src/auth/AuthContext.tsx - Auth state management
+  - client/src/pages/TicketsPage.tsx - Main ticket UI
+  - client/src/pages/LoginPage.tsx
+  - client/src/pages/RegisterPage.tsx
+
+roles_and_permissions:
+  user:
+    - Create own tickets
+    - View own tickets
+    - Edit own ticket description
+    - Delete own tickets
+  agent:
+    - View assigned tickets
+    - Edit assigned tickets
+    - Cannot delete tickets
+  admin:
+    - View all tickets
+    - Change ticket status/priority
+    - Assign agents
+    - Manage users
+    - Delete any ticket

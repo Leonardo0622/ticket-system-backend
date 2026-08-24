@@ -4,3 +4,4 @@ dist/
 .env.local
 coverage/
 README.md
+testsprite_tests\tmp\config.json
