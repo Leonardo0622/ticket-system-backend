@@ -11,7 +11,7 @@ const router = Router();
 router.post("/register",Validate(registerSchema),register);
 router.post("/login",Validate(loginSchema),login);
 router.get("/users",authMiddleware,listUsers);
-router.put("users/:id", authMiddleware,updateUserController);
+router.put("/users/:id", authMiddleware, updateUserController);
 router.delete("/users/:id", authMiddleware, deleteUserController);
 
 export default router;

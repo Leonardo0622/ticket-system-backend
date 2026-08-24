@@ -13,11 +13,11 @@ export function Validate(Schema: ZodSchema, source: ValidationSource = "body"){
             next();
 
         } catch (error: any) {
+            const issues = error?.issues ?? error?.errors ?? [];
             return res.status(400).json({
-                message: "Validation erros", errors: error.errors
-                
+                message: "Validation errors",
+                errors: issues
             });
-
         }
 
     }

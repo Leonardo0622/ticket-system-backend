@@ -65,7 +65,7 @@ export async function getTicketById(ticketId:string, userId: string, role: Role)
         .populate("assignedTo", "name email")
 
         if(!ticket){
-            throw new Error("Ticekt not found");
+            throw new Error("Ticket not found");
         }
 
         if(role === "admin"){
@@ -77,13 +77,16 @@ export async function getTicketById(ticketId:string, userId: string, role: Role)
         }
 
         if(role === "agent" && ticket.assignedTo?.toString() === userId){
-            return ticket
+            return ticket;
         }
 
-        throw new Error("Forbidden")
+        throw new Error("Forbidden");
 
-    } catch (error) {
-        throw new Error("Error fetching by id")
+    } catch (error: any) {
+        if (error.message === "Ticket not found" || error.message === "Forbidden") {
+            throw error;
+        }
+        throw new Error("Error fetching by id");
     }
     
 }
@@ -96,7 +99,7 @@ export async function updateTicket(ticketId: string, userId: string, role: Role,
      const ticket = await Ticket.findById(ticketId);
 
      if(!ticket){
-        throw new Error("Ticekt not found");
+        throw new Error("Ticket not found");
      }
 
         // 🔐 PERMISOS
@@ -132,7 +135,6 @@ export async function deleteTicket(ticketId: string,userId: string, role: Role):
     try {
         
         const ticket = await Ticket.findById(ticketId);
-        console.log(ticket)
 
         if (!ticket) {
             throw new Error("Ticket not found");
@@ -167,7 +169,7 @@ export async function assignTicketToAgent(ticketId: string, agentId: string) {
 
     const ticket = await Ticket.findById(ticketId);
     if(!ticket){
-        throw new Error("Ticekt not found")
+        throw new Error("Ticket not found")
     }
 
     const agent = await User.findById(agentId);

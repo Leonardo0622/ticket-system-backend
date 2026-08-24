@@ -73,20 +73,23 @@ export async function getById(req: Request, res: Response) {
 
         const ticket = await getTicketById(ticketId, userId, role);
 
-        return ticket;
+        if (!ticket) {
+            return res.status(404).json({ message: "Ticket not found" });
+        }
+
+        return res.json(ticket);
 
     } catch (error: any) {
-        
         if (error.message === "Forbidden") {
-        return res.status(403).json({ message: "Access denied" });
+            return res.status(403).json({ message: "Access denied" });
         }
 
         if (error.message === "Ticket not found") {
-        return res.status(404).json({ message: error.message });
+            return res.status(404).json({ message: error.message });
         }
 
-        res.status(500).json({ message: "Server error" });
-        }
+        return res.status(500).json({ message: "Server error" });
+    }
     
 }
 
@@ -106,10 +109,18 @@ export async function update(req: Request, res: Response) {
         const data = req.body;
 
         const ticket = await updateTicket(id, userId, role, data);
-        res.json(ticket)
+        res.json(ticket);
 
     } catch (error: any) {
-        throw error;
+        if (error.message?.includes("permission")) {
+            return res.status(403).json({ message: error.message });
+        }
+
+        if (error.message?.includes("not found")) {
+            return res.status(404).json({ message: error.message });
+        }
+
+        return res.status(400).json({ message: error.message || "Update failed" });
     }
 }
 
@@ -144,7 +155,7 @@ export async function assignTicket(req: Request, res: Response) {
 
         const ticekt = await assignTicketToAgent(id, agentId);
         
-        res.json(ticekt);
+        res.json({ ticket: ticekt });
                 
 
     } catch (error: any) {

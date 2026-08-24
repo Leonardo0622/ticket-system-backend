@@ -2,9 +2,6 @@ import bcrypt from "bcryptjs"
 import { User, IUser, IUserResponse } from "../models/User.model"
 import jwt from "jsonwebtoken"
 import { Role } from "../types/role";
-import { date, success } from "zod";
-
-
 //  Function for creating to user
 export async function registerUser(name:string, email:string, password: string, role: Role = "user"): Promise<IUserResponse> {
 

@@ -6,10 +6,13 @@ export async function register(req: Request, res: Response) {
     try {
 
         const {name, email, password, role} = req.body;
-        const user = await registerUser(name,email,password, role)
+        const user = await registerUser(name, email, password, role)
         res.status(201).json(user);
 
     } catch (error: any) {
+        if (error.message === "User already exists") {
+            return res.status(409).json({ message: error.message });
+        }
         res.status(500).json({message: error.message})
     }
 }
