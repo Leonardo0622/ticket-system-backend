@@ -1,8 +1,21 @@
 istema minimal para gestión de tickets con autenticación JWT, roles y frontend en React/TypeScript.
 
 ## Resumen
-- **Backend**: Node.js + Express + TypeScript + MongoDB (Mongoose), validaciones con `zod`, JWT para autenticación.
-- **Frontend**: React + Vite + TypeScript (`client/`), consumo del API con Axios y React Query.
+
+## Backend: Node.js + Express + TypeScript + MongoDB (Mongoose)
+- Autenticación con JWT y contraseñas hasheadas con bcryptjs.
+- Validaciones de entrada con Zod.
+- API REST documentada con Swagger UI (/api/docs).
+- Control de permisos según rol (crear, asignar, actualizar, eliminar tickets).
+- Seguridad y middleware: Helmet, CORS, Morgan, middlewares de rol/auth.
+
+## Frontend: React + Vite + TypeScript
+- Consumo del API con Axios y React Query.
+- Interfaz dinámica con React Router (rutas protegidas) y AuthContext.
+- Visualización clara de estados y prioridades de tickets (badges de color).
+- UI moderna con Tailwind CSS 4 + componentes shadcn/Radix UI,
+  iconos Lucide, notificaciones Sonner y modo claro/oscuro.
+  
 - **Roles soportados**: `admin`, `agent`, `user`.
 
 ## Autenticación y roles (API)
