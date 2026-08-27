@@ -30,15 +30,10 @@ export function LoginPage() {
     setLoading(true);
     try {
       const res = await api.post("/auth/login", { email, password });
-      const token = res.data?.token ?? res.data?.accessToken ?? "";
-      const role = res.data?.user?.role ?? res.data?.role;
-      const userId =
-        res.data?.user?._id ?? res.data?.user?.id ?? res.data?.userId ?? null;
+      const role = res.data?.user?.role;
+      const userId = res.data?.user?._id ?? res.data?.user?.id ?? null;
       const userName = res.data?.user?.name ?? null;
-      if (!token) {
-        throw new Error("No se recibió token desde el backend");
-      }
-      login(token, role, userId ?? undefined, userName ?? undefined);
+      login(role, userId ?? undefined, userName ?? undefined);
       navigate("/tickets");
     } catch (err: any) {
       setError(

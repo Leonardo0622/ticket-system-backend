@@ -10,7 +10,7 @@ import { User } from "../models/User.model";
 export async function createTicket(title: string, description: string, priority: "low" | "medium" | "high",assignedTo: string | null, createdBy: string): Promise<ITicket> {
 
     try {
-        
+
         const ticket = await Ticket.create({
             title,
             description,
@@ -23,9 +23,9 @@ export async function createTicket(title: string, description: string, priority:
 
     } catch (error) {
         throw new Error("Error Creating Ticket")
-        
+
     }
-    
+
 }
 
 
@@ -34,7 +34,7 @@ export async function createTicket(title: string, description: string, priority:
 export async function listTickets(userId: string, rol: Role): Promise<ITicket[]> {
 
     try {
-        
+
         if(rol === "user"){
             return await Ticket.find({createdBy: new Types.ObjectId(userId)})
         }
@@ -51,15 +51,15 @@ export async function listTickets(userId: string, rol: Role): Promise<ITicket[]>
 
     } catch (error) {
         throw new Error("Error fetching tickets")
-        
+
     }
-    
+
 }
 
 export async function getTicketById(ticketId:string, userId: string, role: Role): Promise <ITicket | null> {
 
     try {
-        
+
         const ticket = await Ticket.findById(ticketId)
         .populate("createdBy", "name email")
         .populate("assignedTo", "name email")
@@ -88,35 +88,47 @@ export async function getTicketById(ticketId:string, userId: string, role: Role)
         }
         throw new Error("Error fetching by id");
     }
-    
+
 }
 
 
 export async function updateTicket(ticketId: string, userId: string, role: Role, data: Partial<ITicket>): Promise<ITicket> {
 
     try {
-        
+
      const ticket = await Ticket.findById(ticketId);
 
      if(!ticket){
         throw new Error("Ticket not found");
      }
 
-        // 🔐 PERMISOS
      if (role === "user") {
         if (ticket.createdBy.toString() !== userId) {
-        throw new Error("You do not have permission to update this ticket");
+            throw new Error("You do not have permission to update this ticket");
+        }
+        const allowedFields = ["title", "description"];
+        for (const key of Object.keys(data)) {
+            if (!allowedFields.includes(key)) {
+                throw new Error(`You cannot modify ${key}`);
+            }
         }
     }
 
      if (role === "agent") {
         if (
-        !ticket.assignedTo ||
-        ticket.assignedTo.toString() !== userId
+            !ticket.assignedTo ||
+            ticket.assignedTo.toString() !== userId
         ) {
-        throw new Error("You do not have permission to update this ticket");
+            throw new Error("You do not have permission to update this ticket");
+        }
+        const allowedFields = ["title", "description", "status"];
+        for (const key of Object.keys(data)) {
+            if (!allowedFields.includes(key)) {
+                throw new Error(`You cannot modify ${key}`);
+            }
         }
     }
+
       Object.assign(ticket, data);
         await ticket.save();
 
@@ -124,23 +136,23 @@ export async function updateTicket(ticketId: string, userId: string, role: Role,
 
     } catch (error) {
         throw error;
-        
+
     }
-    
+
 }
 
 
 export async function deleteTicket(ticketId: string,userId: string, role: Role): Promise<void> {
 
     try {
-        
+
         const ticket = await Ticket.findById(ticketId);
 
         if (!ticket) {
             throw new Error("Ticket not found");
         }
 
-        
+
         if (role === "user") {
             if (ticket.createdBy.toString() !== userId) {
             throw new Error("You do not have permission to delete this ticket");
@@ -157,7 +169,7 @@ export async function deleteTicket(ticketId: string,userId: string, role: Role):
     } catch (error) {
         throw error;
     }
-    
+
 }
 
 
@@ -177,11 +189,10 @@ export async function assignTicketToAgent(ticketId: string, agentId: string) {
         throw new Error("User is not Agent")
     }
 
-    // Asignamos el ticket al agent
     ticket.assignedTo = agent._id;
     ticket.status = "in_progress"
 
     await ticket.save()
     return ticket;
-    
+
 }

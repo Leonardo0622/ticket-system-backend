@@ -7,8 +7,8 @@ import { Layout } from "./components/Layout";
 import { Toaster } from "@/components/ui/sonner";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
-  const { token } = useAuth();
-  if (!token) {
+  const { userId } = useAuth();
+  if (!userId) {
     return <Navigate to="/login" replace />;
   }
   return children;

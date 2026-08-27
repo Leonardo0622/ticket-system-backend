@@ -31,7 +31,7 @@ function getInitials(name?: string | null): string {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { token, userName, role, logout } = useAuth();
+  const { userId, userName, role, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4">
           <div className="flex min-w-0 items-center gap-2 sm:gap-4">
-            <Link to={token ? "/tickets" : "/"} className="flex items-center gap-2 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 rounded-lg">
+            <Link to={userId ? "/tickets" : "/"} className="flex items-center gap-2 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 rounded-lg">
               <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                 <Ticket className="size-4" />
               </span>
@@ -56,7 +56,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 Ticket System
               </span>
             </Link>
-            {token && (
+            {userId && (
               <nav className="flex items-center gap-1">
                 <Button
                   asChild
@@ -75,7 +75,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
           <div className="flex items-center gap-1.5">
             <ThemeToggle />
-            {!token && (
+            {!userId && (
               <>
                 <Button asChild variant="ghost" size="sm">
                   <Link to="/login">Iniciar sesión</Link>
@@ -85,7 +85,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </Button>
               </>
             )}
-            {token && (
+            {userId && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button

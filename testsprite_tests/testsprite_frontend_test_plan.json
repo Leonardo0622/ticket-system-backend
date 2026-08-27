@@ -1,1 +1,493 @@
-[]
+[
+  {
+    "id": "TC001",
+    "title": "Unauthenticated visitor is blocked from the protected tickets workspace",
+    "description": "This verifies that a visitor without access is prevented from viewing the protected ticket list and is redirected or blocked.",
+    "category": "Ticket Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tickets"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is redirected away from the protected workspace"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the login or access gate is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "New user can register and reach the ticket workspace",
+    "description": "This verifies that a new user can complete registration and be redirected to the protected ticket list afterward.",
+    "category": "User Registration",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the name field with a valid name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with a valid email"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with a valid password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the tickets workspace"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the ticket list is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Existing user can log in and reach the ticket workspace",
+    "description": "This verifies that a user can sign in successfully and be redirected to the protected ticket list.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the tickets workspace"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the ticket list is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Authenticated user can load the ticket list",
+    "description": "This verifies that the protected ticket workspace loads the current ticket list for an authenticated user.",
+    "category": "Ticket Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the ticket list to load"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the ticket list is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the protected workspace remains accessible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Authenticated user can create a new support ticket",
+    "description": "This verifies that an authenticated user can open the create ticket dialog, submit a valid ticket, and see it appear in the list.",
+    "category": "Ticket Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the create ticket dialog"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the title field with a valid title"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the description field with a valid description"
+      },
+      {
+        "type": "action",
+        "description": "Submit the ticket form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new ticket is displayed in the list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the create ticket dialog closes"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Authenticated user can refresh the tickets page without losing access",
+    "description": "This verifies that refreshing the protected workspace keeps the user authenticated and reloads the ticket list.",
+    "category": "Ticket Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the ticket list to load"
+      },
+      {
+        "type": "action",
+        "description": "Refresh the page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the ticket list is displayed after refresh"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the protected workspace remains accessible after refresh"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Authenticated user can switch the theme on the tickets page",
+    "description": "This verifies that the theme toggle changes the tickets page appearance for an authenticated user.",
+    "category": "Theme Personalization",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Wait for the ticket list to load"
+      },
+      {
+        "type": "action",
+        "description": "Toggle the theme setting"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tickets page appearance changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the active theme state is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC008",
+    "title": "Switch the tickets workspace to dark mode",
+    "description": "A visitor using the tickets workspace can switch the interface to dark mode and see the appearance update.",
+    "category": "Dark/Light Theme Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tickets"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the interface switches to dark mode"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC009",
+    "title": "Switch the tickets workspace back to light mode",
+    "description": "A visitor using the tickets workspace can switch the interface back to light mode and see the appearance update.",
+    "category": "Dark/Light Theme Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tickets"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control again"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the interface switches to light mode"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC010",
+    "title": "Keep the selected theme while using the tickets page",
+    "description": "A visitor who changes the theme on the tickets page can continue using the page with the selected visual mode applied.",
+    "category": "Dark/Light Theme Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tickets"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tickets workspace remains accessible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected theme is still applied"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC011",
+    "title": "Authenticated user sees validation feedback for an empty ticket form",
+    "description": "This verifies that the create ticket dialog prevents submitting an empty title or description and shows validation feedback.",
+    "category": "Ticket Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the create ticket dialog"
+      },
+      {
+        "type": "action",
+        "description": "Submit the ticket form without filling required fields"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify validation errors are visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the ticket is not created"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC012",
+    "title": "New user sees validation feedback for invalid registration details",
+    "description": "This verifies that registration with invalid details is rejected and an error message is shown.",
+    "category": "User Registration",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the name field with an invalid value"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with an invalid email"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with a short password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a validation error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the registration form"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC013",
+    "title": "Theme toggle is available in the tickets workspace",
+    "description": "A visitor on the tickets page can find the theme toggle and use it to change the interface appearance.",
+    "category": "Dark/Light Theme Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tickets"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the theme toggle control is visible"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the interface appearance changes"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC014",
+    "title": "Theme toggle updates the layout styling consistently",
+    "description": "A visitor can switch the theme on the tickets page and see the workspace styling update consistently across the layout.",
+    "category": "Dark/Light Theme Toggle",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /tickets"
+      },
+      {
+        "type": "action",
+        "description": "Click the theme toggle control"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the layout appearance changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the tickets workspace is still displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC015",
+    "title": "Existing user sees validation feedback for invalid login credentials",
+    "description": "This verifies that invalid login credentials are rejected and an error message is shown.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with an invalid email"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with an invalid password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a validation or authentication error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the login form"
+      }
+    ],
+    "priority": "Low"
+  }
+]

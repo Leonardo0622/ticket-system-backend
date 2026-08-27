@@ -1,18 +1,18 @@
 import {
   ReactNode,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState
 } from "react";
+import { api } from "../api/client";
 
 interface AuthContextValue {
-  token: string | null;
   role: string | null;
   userId: string | null;
   userName: string | null;
   login: (
-    token: string,
     role?: string,
     userId?: string,
     userName?: string
@@ -23,69 +23,51 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("auth_token");
-    const storedRole = localStorage.getItem("auth_role");
-    const storedUserId = localStorage.getItem("auth_user_id");
-    const storedUserName = localStorage.getItem("auth_user_name");
-    if (storedToken) {
-      setToken(storedToken);
-    }
-    if (storedRole) {
-      setRole(storedRole);
-    }
-    if (storedUserId) {
-      setUserId(storedUserId);
-    }
-    if (storedUserName) {
-      setUserName(storedUserName);
-    }
+    const checkAuth = async () => {
+      try {
+        const res = await api.get("/auth/me");
+        if (res.data?.user) {
+          const u = res.data.user;
+          setRole(u.role ?? null);
+          setUserId(u._id ?? u.id ?? null);
+          setUserName(u.name ?? null);
+        }
+      } catch {
+        // Not authenticated
+      }
+    };
+    checkAuth();
   }, []);
 
   const login = (
-    newToken: string,
     newRole?: string,
     newUserId?: string,
     newUserName?: string
   ) => {
-    setToken(newToken);
-    localStorage.setItem("auth_token", newToken);
-
-    if (newRole) {
-      setRole(newRole);
-      localStorage.setItem("auth_role", newRole);
-    }
-
-    if (newUserId) {
-      setUserId(newUserId);
-      localStorage.setItem("auth_user_id", newUserId);
-    }
-
-    if (newUserName) {
-      setUserName(newUserName);
-      localStorage.setItem("auth_user_name", newUserName);
-    }
+    if (newRole) setRole(newRole);
+    if (newUserId) setUserId(newUserId);
+    if (newUserName) setUserName(newUserName);
   };
 
-  const logout = () => {
-    setToken(null);
+  const logout = useCallback(async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch {
+      // Ignore errors
+    }
     setRole(null);
     setUserId(null);
     setUserName(null);
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("auth_role");
-    localStorage.removeItem("auth_user_id");
-    localStorage.removeItem("auth_user_name");
-  };
+  }, []);
 
   return (
     <AuthContext.Provider
-      value={{ token, role, userId, userName, login, logout }}
+      value={{ role, userId, userName, login, logout }}
     >
       {children}
     </AuthContext.Provider>

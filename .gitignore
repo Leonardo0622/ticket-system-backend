@@ -1,7 +1,19 @@
 node_modules/
 dist/
+coverage/
+*.log
+
+# Environment files
 .env
 .env.local
-coverage/
+.env*.local
+client/.env
+client/.env.local
+client/.env*.local
+
+# Test artifacts
+testsprite_tests/tmp/
+testsprite_tests/tmp/config.json
+
+# Documentation (auto-generated)
 README.md
-testsprite_tests\tmp\config.json

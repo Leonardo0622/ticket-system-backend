@@ -6,22 +6,18 @@ import { Role } from "../types/role";
 export async function create(req: Request, res: Response) {
 
     try {
-        
+
         if(!req.user){
              return res.status(401).json({message: "Unauthorized"})
         }
 
         const {title, description, priority = "low", assignedTo} = req.body;
 
-        if (!title || !description) {
-        return res.status(400).json({ message: "Missing required fields" });
-        }
-
         const createdBy = (req.user as any).id;
 
         const ticket = await createTicket(
-            title, 
-            description, 
+            title,
+            description,
             priority,
             assignedTo || null,
             createdBy
@@ -30,46 +26,46 @@ export async function create(req: Request, res: Response) {
         res.status(201).json({ticket});
 
     } catch (error: any) {
-        res.status(400).json({message: error.message})
-        
+        res.status(400).json({message: "Failed to create ticket"})
+
     }
-    
+
 }
 
 
 export async function list(req: Request, res: Response) {
 
     try {
-        
+
         if(!req.user){
             return res.status(401).json({message: "Unauthorized"})
         }
 
-        const {id, role} = req.user 
+        const {id, role} = req.user
 
         const ticket = await listTickets(id, role);
 
         res.json({ticket});
 
     } catch (error: any) {
-        res.status(500).json({ message: error.message });
-        
+        res.status(500).json({ message: "Internal server error" });
+
     }
-    
+
 }
 
 
 export async function getById(req: Request, res: Response) {
 
     try {
-        
+
         if(!req.user){
             return res.status(401).json({message: "Unauthorized"})
         }
 
         const {id: userId, role} = req.user
         const ticketId = req.params.id;
-        
+
 
         const ticket = await getTicketById(ticketId, userId, role);
 
@@ -88,16 +84,16 @@ export async function getById(req: Request, res: Response) {
             return res.status(404).json({ message: error.message });
         }
 
-        return res.status(500).json({ message: "Server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
-    
+
 }
 
 export async function update(req: Request, res: Response) {
-    
+
 
     try {
-        
+
         if(!req.user){
             return res.status(401).json({message: "Unauthorized"})
         }
@@ -120,7 +116,7 @@ export async function update(req: Request, res: Response) {
             return res.status(404).json({ message: error.message });
         }
 
-        return res.status(400).json({ message: error.message || "Update failed" });
+        return res.status(400).json({ message: "Update failed" });
     }
 }
 
@@ -132,7 +128,7 @@ export async function remove(req: Request, res: Response) {
     }
 
     const { id: userId, role } = req.user;
-    const ticketId = req.params.id; 
+    const ticketId = req.params.id;
 
     await deleteTicket(ticketId, userId, role);
     res.json({ message: "Ticket deleted successfully" });
@@ -146,6 +142,10 @@ export async function remove(req: Request, res: Response) {
 export async function assignTicket(req: Request, res: Response) {
 
     try {
+        if (!req.user || req.user.role !== "admin") {
+            return res.status(403).json({ message: "Forbidden" });
+        }
+
         const {id} = req.params;
         const {agentId} = req.body;
 
@@ -154,13 +154,13 @@ export async function assignTicket(req: Request, res: Response) {
         }
 
         const ticekt = await assignTicketToAgent(id, agentId);
-        
+
         res.json({ ticket: ticekt });
-                
+
 
     } catch (error: any) {
-        return res.status(400).json({message: error.message})
-        
+        return res.status(400).json({message: "Failed to assign ticket"})
+
     }
-    
+
 }
