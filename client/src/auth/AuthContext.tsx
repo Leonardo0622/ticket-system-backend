@@ -8,51 +8,48 @@ import {
 } from "react";
 import { api } from "../api/client";
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 interface AuthContextValue {
-  role: string | null;
-  userId: string | null;
-  userName: string | null;
-  login: (
-    role?: string,
-    userId?: string,
-    userName?: string
-  ) => void;
-  logout: () => void;
+  user: User | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<User>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<string | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const res = await api.get("/auth/me");
         if (res.data?.user) {
-          const u = res.data.user;
-          setRole(u.role ?? null);
-          setUserId(u._id ?? u.id ?? null);
-          setUserName(u.name ?? null);
+          setUser(res.data.user);
         }
       } catch {
-        // Not authenticated
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
     };
     checkAuth();
   }, []);
 
-  const login = (
-    newRole?: string,
-    newUserId?: string,
-    newUserName?: string
-  ) => {
-    if (newRole) setRole(newRole);
-    if (newUserId) setUserId(newUserId);
-    if (newUserName) setUserName(newUserName);
-  };
+  const login = useCallback(async (email: string, password: string): Promise<User> => {
+    const res = await api.post("/auth/login", { email, password });
+    const loggedUser: User = res.data.user;
+    setUser(loggedUser);
+    return loggedUser;
+  }, []);
 
   const logout = useCallback(async () => {
     try {
@@ -60,15 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Ignore errors
     }
-    setRole(null);
-    setUserId(null);
-    setUserName(null);
+    setUser(null);
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ role, userId, userName, login, logout }}
-    >
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -81,4 +74,3 @@ export function useAuth() {
   }
   return ctx;
 }
-

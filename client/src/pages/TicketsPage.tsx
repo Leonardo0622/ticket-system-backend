@@ -113,7 +113,9 @@ function StatCard({ icon, label, value, tone }: StatCardProps) {
 
 export function TicketsPage() {
   const queryClient = useQueryClient();
-  const { role, userId } = useAuth();
+  const { user } = useAuth();
+  const role = user?.role ?? null;
+  const userId = user?._id ?? null;
 
   const {
     data,

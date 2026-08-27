@@ -1,7 +1,6 @@
 import { FormEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2, Lock, LogIn, Mail, Ticket } from "lucide-react";
-import { api } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,31 +18,47 @@ export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { user, loading, login } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Verificando sesión...
+      </div>
+    );
+  }
+
+  if (user) {
+    return (
+      <Navigate
+        to={user.role === "admin" ? "/admin" : "/tickets"}
+        replace
+      />
+    );
+  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-    setLoading(true);
+    setSubmitting(true);
     try {
-      const res = await api.post("/auth/login", { email, password });
-      const role = res.data?.user?.role;
-      const userId = res.data?.user?._id ?? res.data?.user?.id ?? null;
-      const userName = res.data?.user?.name ?? null;
-      login(role, userId ?? undefined, userName ?? undefined);
-      navigate("/tickets");
+      const loggedUser = await login(email, password);
+      navigate(
+        loggedUser.role === "admin" ? "/admin" : "/tickets",
+        { replace: true }
+      );
     } catch (err: any) {
       setError(
         err?.response?.data?.message ||
           err?.response?.data?.error ||
           err?.message ||
-          "Error al iniciar sesión"
+          "Credenciales inválidas"
       );
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -113,8 +128,8 @@ export function LoginPage() {
               {error}
             </div>
           )}
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? (
+          <Button type="submit" disabled={submitting} className="w-full">
+            {submitting ? (
               <>
                 <Loader2 className="animate-spin" />
                 Entrando...

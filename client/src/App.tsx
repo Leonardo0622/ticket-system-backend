@@ -7,8 +7,15 @@ import { Layout } from "./components/Layout";
 import { Toaster } from "@/components/ui/sonner";
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
-  const { userId } = useAuth();
-  if (!userId) {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Verificando sesión...
+      </div>
+    );
+  }
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
   return children;

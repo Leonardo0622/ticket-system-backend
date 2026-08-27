@@ -31,12 +31,12 @@ function getInitials(name?: string | null): string {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { userId, userName, role, logout } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/login");
   };
 
@@ -48,7 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between gap-3 px-4">
           <div className="flex min-w-0 items-center gap-2 sm:gap-4">
-            <Link to={userId ? "/tickets" : "/"} className="flex items-center gap-2 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 rounded-lg">
+            <Link to={user ? "/tickets" : "/"} className="flex items-center gap-2 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 rounded-lg">
               <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                 <Ticket className="size-4" />
               </span>
@@ -56,7 +56,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 Ticket System
               </span>
             </Link>
-            {userId && (
+            {user && (
               <nav className="flex items-center gap-1">
                 <Button
                   asChild
@@ -75,7 +75,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
           <div className="flex items-center gap-1.5">
             <ThemeToggle />
-            {!userId && (
+            {!user && (
               <>
                 <Button asChild variant="ghost" size="sm">
                   <Link to="/login">Iniciar sesión</Link>
@@ -85,7 +85,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </Button>
               </>
             )}
-            {userId && (
+            {user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
@@ -95,7 +95,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   >
                     <Avatar className="size-8 border">
                       <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
-                        {getInitials(userName)}
+                        {getInitials(user.name)}
                       </AvatarFallback>
                     </Avatar>
                   </button>
@@ -103,11 +103,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="flex flex-col gap-1.5">
                     <span className="truncate text-sm font-medium">
-                      {userName ?? "Mi cuenta"}
+                      {user.name ?? "Mi cuenta"}
                     </span>
-                    {role && (
+                    {user.role && (
                       <Badge variant="secondary" className="w-fit">
-                        {roleLabels[role] ?? role}
+                        {roleLabels[user.role] ?? user.role}
                       </Badge>
                     )}
                   </DropdownMenuLabel>
