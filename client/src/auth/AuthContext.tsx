@@ -6,7 +6,7 @@ import {
   useEffect,
   useState
 } from "react";
-import { api } from "../api/client";
+import { api, TOKEN_STORAGE_KEY } from "../api/client";
 
 interface User {
   _id: string;
@@ -47,6 +47,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (email: string, password: string): Promise<User> => {
     const res = await api.post("/auth/login", { email, password });
     const loggedUser: User = res.data.user;
+    const token: string = res.data.token;
+    if (token) {
+      localStorage.setItem(TOKEN_STORAGE_KEY, token);
+    }
     setUser(loggedUser);
     return loggedUser;
   }, []);
@@ -57,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Ignore errors
     }
+    localStorage.removeItem(TOKEN_STORAGE_KEY);
     setUser(null);
   }, []);
 

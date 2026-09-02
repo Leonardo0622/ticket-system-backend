@@ -33,9 +33,15 @@ app.use(helmet({
 
 app.use(morgan("combined"));
 
+const isProduction = process.env.NODE_ENV === "production";
+
+const defaultOrigins = isProduction
+  ? ["https://ticket-system-backend-six.vercel.app"]
+  : ["http://localhost:5173"];
+
 const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(",").map((o) => o.trim())
-  : ["http://localhost:5173"];
+  : defaultOrigins;
 
 app.use(
   cors({
@@ -50,7 +56,6 @@ app.use(cookieParser());
 if (process.env.NODE_ENV !== "production") {
     app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
-
 app.use("/api/auth", router);
 app.use("/api/tickets", ticketRoutes);
 
